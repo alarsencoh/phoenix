@@ -4,6 +4,8 @@ __pipeline__:
   description: Human GRCh38 genomics suite
   version: development
 constants:
+  docker_server: ghcr.io/tgen/jetstream_containers
+  docker_images_tag: 20210113-sandybridge
   tools:
     bedtools:
       module: BEDTools/2.29.0-GCC-8.2.0-2.31.1

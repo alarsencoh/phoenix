@@ -7,6 +7,7 @@
   retry: 2
   cpus: 6
   walltime: "4:00:00"
+  docker_image: {{ constants.docker_server }}/tgen_phoenix_copy_fastqs:{{ constants.docker_images_tag }}
   cmd: |
     set -uev
 
