@@ -181,7 +181,7 @@
     #}
     {% if not debug %}
     {% for rgid in sample.read_groups %}
-    rm -r "temp/{{ sample.gltype }}/alignment/bwa/{{ sample.name }}/{{ rgid }}/"
+    rm -r "temp/{{ sample.gltype }}/alignment/bwa/{{ sample.name }}/{{ rgid }}/" || true
     {% endfor %}
     {% endif %}
 
