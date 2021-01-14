@@ -229,6 +229,7 @@
   walltime: "4:00:00"
   cpus: 4
   mem: 8G
+  docker_image: {{ constants.docker_server }}/tgen_phoenix_samtools_flagstat:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -289,6 +290,7 @@
   walltime: "4:00:00"
   cpus: 1
   mem: 2G
+  docker_image: {{ constants.docker_server }}/tgen_phoenix_samtools_idxstats:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -355,7 +357,13 @@
     and other metrics for {{ sample.name }} ({{ aligner }}) were
     gathered with {{ constants.tools.gatk.verbose }}
     CollectMultipleMetrics.
-  input: {{ bam }}
+  input:
+    - {{ bam }}
+    {% if aligner == 'star' %}
+    - "{{ constants.phoenix.star_fasta }}"
+    {% elif aligner == 'bwa' %}
+    - "{{ constants.phoenix.reference_fasta }}"
+    {% endif %}
   output:
     - {{ results_dir }}/{{ bam|basename }}.alignment_summary_metrics
     - {{ results_dir }}/{{ bam|basename }}.bait_bias_detail_metrics
@@ -393,6 +401,7 @@
   walltime: "24:00:00"
   cpus: 2
   mem: 8G
+  docker_image: {{ constants.docker_server }}/tgen_phoenix_gatk_collectmultiplemetrics:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -486,10 +495,16 @@
 
 - name: gatk_convertsequencingarrtifacttooxog_{{ sample.name }}_{{ aligner }}
   tags: [{{ sample.gltype }}, quality_control, stats, gatk_ConvertSequencingArtifactToOxoG, {{ sample.name }}]
-  input: {{ bam }}
   {% if tasks[taskPrefix+"_quality_control_stats_gatk_CollectMultipleMetrics"]|default(true) %}
   after: gatk_collectmultiplemetrics_{{ sample.name }}_{{ aligner }}
   {% endif %}
+  input:
+    - {{ bam }}
+    {% if aligner == 'star' %}
+    - "{{ constants.phoenix.star_fasta }}"
+    {% elif aligner == 'bwa' %}
+    - "{{ constants.phoenix.reference_fasta }}"
+    {% endif %}
   output:
     - {{ results_dir }}/{{ bam|basename }}.oxog_metrics
     {% if sample.gltype == 'singlecellrna' %}
@@ -502,6 +517,7 @@
   walltime: "24:00:00"
   cpus: 4
   mem: 8G
+  docker_image: {{ constants.docker_server }}/tgen_phoenix_gatk_convertsequencingarrtifacttooxog:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -593,7 +609,15 @@
 
 - name: snpsniffer_geno_{{ task }}
   tags: [{{ sample.gltype }}, quality_control, genotype_concordance, snpSniffer, {{ sample.name }}]
-  input: {{ bam }}
+  input:
+    - {{ bam }}
+    {% if aligner == 'star' %}
+    - {{ constants.phoenix.star_fasta }}
+    {% elif aligner == 'bwa' %}
+    - {{ constants.phoenix.reference_fasta }}
+    {% endif %}
+    - {{ constants.phoenix.snpSniffer_sites }}
+    - {{ constants.phoenix.bcftools_annotate_contig_update_ucsc2ensembl }}
   output:
     - {{ results_dir }}/{{ bam|basename }}.snpSniffer.vcf
     {% if libraryCount == 1 %}
@@ -604,6 +628,7 @@
   {% endif %}
   cpus: 2
   mem: 4G
+  docker_image: {{ constants.docker_server }}/tgen_phoenix_snpsniffer_geno:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
