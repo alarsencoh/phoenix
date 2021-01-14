@@ -7,13 +7,20 @@
 
 - name: bam_to_cram_{{ sample.name }}_{{ aligner }}
   tags: [{{ sample.gltype }}, {{ sample.name }}, bam_to_cram ]
-  input: {{ bam_path }}
+  input:
+    {% if aligner == 'star' %}
+    - "{{ constants.phoenix.star_fasta }}"
+    {% elif aligner == 'bwa' %}
+    - "{{ constants.phoenix.reference_fasta }}"
+    {% endif %}
+    - {{ bam_path }}
   output:
     - {{ cram_path }}
     - {{ cram_path }}.crai
   walltime: "8:00:00"
   cpus: 8
   mem: 4G
+  docker_image: {{ constants.docker_server }}/tgen_phoenix_bam_to_cram:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
