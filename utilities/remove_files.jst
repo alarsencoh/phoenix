@@ -18,13 +18,15 @@
     - {{ task }}
     {% endfor %}
     {% endif %}
+  input: {{ directory }}/
   walltime: "0:10:00"
   cpus: 1
   mem: 2G
+  docker_image: {{ constants.docker_server }}/tgen_phoenix_removing_files:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
 
-    rm -r {{ directory }}
+    rm -r {{ directory }}/* || true
 
 {% endmacro %}
