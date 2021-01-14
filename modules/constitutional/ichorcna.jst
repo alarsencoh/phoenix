@@ -34,7 +34,8 @@
 
 - name: ichor_cna_{{ aligner }}_{{ sample.name }}
   tags: [{{ sample.gltype}}, constitutional, cna_caller, ichor, {{ sample.name }}]
-  input: {{ wig }}
+  input:
+    - {{ wig }}
   output:
     - {{ results_dir }}/{{ sample.name }}.{{ aligner }}.ichorCNA.cna.seg
     - {{ results_dir }}/{{ sample.name }}.{{ aligner }}.ichorCNA.seg
@@ -51,6 +52,7 @@
   walltime: "24:00:00"
   cpus: 1
   mem: 2G
+  docker_image: {{ constants.docker_server }}/tgen_phoenix_ichor_cna:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
