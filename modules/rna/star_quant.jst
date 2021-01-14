@@ -41,6 +41,8 @@
     {{ constants.tools.star.verbose }} followed by TODO...
   reset: predecessors
   input:
+    - {{ constants.phoenix.star_fasta }}
+    - {{ constants.phoenix.gtf }}
     {% for fq in r1fqlist %}
     - {{ fq.path }}
     {% endfor %}

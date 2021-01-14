@@ -24,6 +24,7 @@
   tags: [{{ sample.gltype }}, transcriptome, fusion_caller, STAR_Fusion, {{ sample.name }}]
   reset: predecessors
   input:
+    - {{ constants.phoenix.starfusion_index }}/ref_genome.fa.star.idx
   {% for fq in r1fqlist %}
     - temp/fastqs/{{ fq.basename }}
   {% endfor %}
