@@ -13,11 +13,15 @@
 
 - name: freebayes_{{ sample.name }}_{{ aligner }}_{{ loop.index }}
   tags: [{{ sample.gltype}}, constitutional, snp_indel_caller, freebayes, {{ sample.name }}]
-  input: {{ bam }}
-  output: {{ temp_dir }}/{{ loop.index }}.vcf
+  input:
+    - {{ bam }}
+    - {{ constants.phoenix.reference_fasta }}
+  output:
+    - {{ temp_dir }}/{{ loop.index }}.vcf
   walltime: "24:00:00"
   cpus: 1
   mem: 4G
+  docker_image: {{ constants.docker_server }}/tgen_phoenix_freebayes:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -49,14 +53,15 @@
   reset: predecessors
   input:
     {% for batch in constants.phoenix.calling_intervals %}
-    - {{ temp_dir }}/{{ loop.index }}.vcf
-    {% endfor %}
+    - "{{ temp_dir }}/{{ loop.index }}.vcf"
+    {% endfor %}  
   output:
     - {{ all_vcf }}
     - {{ all_vcf }}.tbi
   walltime: "24:00:00"
   cpus: 1
   mem: 4G
+  docker_image: {{ constants.docker_server }}/tgen_phoenix_freebayes_merge:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -81,13 +86,18 @@
 
 - name: freebayes_filter_variants_{{ sample.name }}_{{ aligner }}
   tags: [{{ sample.gltype}}, constitutional, snp_indel_caller, freebayes, {{ sample.name }}]
-  input: {{ all_vcf }}
+  input:
+    - {{ all_vcf }}
+    {% if sample.gltype == 'exome' %}
+    - "{{ sample.capture_kit.extended_bed }}"
+    {% endif %}
   output:
     - {{ pass_vcf }}
     - {{ pass_vcf }}.tbi
   walltime: "24:00:00"
   cpus: 1
   mem: 4G
+  docker_image: {{ constants.docker_server }}/tgen_phoenix_freebayes_filter_variants:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
