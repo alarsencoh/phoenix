@@ -23,6 +23,7 @@
   walltime: "1:00:00"
   cpus: 1
   mem: 2G
+  docker_image: {{ constants.docker_server }}/tgen_phoenix_md5sum_bam_cram:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
