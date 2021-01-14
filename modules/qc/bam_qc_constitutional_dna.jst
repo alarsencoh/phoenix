@@ -127,7 +127,11 @@
 
 - name: freebayes_sex_check_{{ task }}
   tags: [{{ sample.gltype }}, quality_control, constitutional_sex_check, freebayes, {{ sample.name }}]
-  input: {{ bam }}
+  input:
+    - {{ bam }}
+    - {{ constants.phoenix.reference_fasta }}
+    - {{ constants.phoenix.sex_check_targets }}
+    - {{ constants.phoenix.sex_check_vcf }}
   output:
     - {{ output }}
     {% if libraryCount == 1 %}
@@ -138,6 +142,7 @@
   {% endif %}
   cpus: 1
   mem: 2G
+  docker_image: {{ constants.docker_server }}/tgen_phoenix_freebayes_sex_check:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
