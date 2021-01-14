@@ -143,6 +143,7 @@
   walltime: "1:00:00"
   cpus: 10
   mem: 8G
+  docker_image: {{ constants.docker_server }}/tgen_phoenix_no_baserecalibration:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
