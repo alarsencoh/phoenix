@@ -43,7 +43,14 @@
   tags: [{{ sample.gltype }}, quality_control, stats, samtools_stats, {{ sample.name }}]
   methods: Quality control metrics for {{ sample.name }} ({{ aligner }}) were
     generated with {{ constants.tools.samtools.verbose }} stats.
-  input: {{ bam }}
+  input:
+    - {{ constants.phoenix.reference_fasta }}
+    - {{ constants.phoenix.reference_non_N_bed }}
+    - {{ sample.gltype}}/alignment/{{ aligner }}/{{ sample.name }}/{{ sample.name }}.{{ aligner }}.bam
+    {% if sample.gltype == 'exome' %}
+    - {{ constants.phoenix.reference_non_N_bed }}
+    - {{ sample.capture_kit.no_header_targets_interval_list }}
+    {% endif %}
   output:
     - {{ results_dir }}/{{ bam|basename }}.bamstats.txt
     - {{ results_dir }}/{{ bam|basename }}.samstats_no_N_1based_target_regions.txt
@@ -91,6 +98,7 @@
   walltime: "4:00:00"
   cpus: 4
   mem: 8G
+  docker_image: {{ constants.docker_server }}/tgen_phoenix_samtools_stats:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
