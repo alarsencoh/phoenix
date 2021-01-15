@@ -2,7 +2,13 @@
 {%- set output_bcf %}{{ temp_dir }}/{{ sample_or_pair.name }}.{{ aligner }}.{{ variant_caller }}.db.bcf{% endset %}
 - name: bcftools_annotate_{{ variant_caller }}_{{ sample_or_pair.name }}_{{ aligner }}
   tags: [{{ sample_or_pair.gltype }}, {{ analysis_type }}, {{ task_type }}, annotate_vcfs, {{ variant_caller }}, {{ sample_or_pair.name }}]
-  input: {{ input_vcf }}
+    - {{ input_vcf }}
+    - {{ constants.phoenix.dbsnp_v152 }}
+    - {{ constants.phoenix.gnomad_exome_v2_1_1_liftover }}
+    - {{ constants.phoenix.gnomad_genome_v3_0 }}
+    - {{ constants.phoenix.cosmic_coding_v90 }}
+    - {{ constants.phoenix.cosmic_noncoding_v90 }}
+    - {{ constants.phoenix.clinvar_20190715 }}
   output:
     {% if snpeff_flag or vep_flag %}
     - {{ temp_vcf }}
@@ -14,6 +20,7 @@
   walltime: "8:00:00"
   cpus: 4
   mem: 4G
+  docker_image: {{ constants.docker_server }}/tgen_phoenix_bcftools_annotate:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
