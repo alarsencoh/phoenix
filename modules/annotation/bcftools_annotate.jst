@@ -2,6 +2,7 @@
 {%- set output_bcf %}{{ temp_dir }}/{{ sample_or_pair.name }}.{{ aligner }}.{{ variant_caller }}.db.bcf{% endset %}
 - name: bcftools_annotate_{{ variant_caller }}_{{ sample_or_pair.name }}_{{ aligner }}
   tags: [{{ sample_or_pair.gltype }}, {{ analysis_type }}, {{ task_type }}, annotate_vcfs, {{ variant_caller }}, {{ sample_or_pair.name }}]
+  input:
     - {{ input_vcf }}
     - {{ constants.phoenix.dbsnp_v152 }}
     - {{ constants.phoenix.gnomad_exome_v2_1_1_liftover }}
