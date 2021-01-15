@@ -32,7 +32,7 @@
   cpus: 20
   mem: 20G
   walltime: "24:00:00"
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_strelka2:{{ constants.docker_images_tag }}
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_strelka2:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -121,7 +121,7 @@
     - {{ pass_vcf }}.tbi
   cpus: 1
   mem: 2G
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_strelka2_filter_variants:{{ constants.docker_images_tag }}
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_strelka2_filter_variants:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail

@@ -12,7 +12,7 @@
   walltime: "8:00:00"
   cpus: 4
   mem: 8G
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_vep_all:{{ constants.docker_images_tag }}
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_vep_all:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -72,7 +72,7 @@
   walltime: "8:00:00"
   cpus: 4
   mem: 8G
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_vep_con:{{ constants.docker_images_tag }}
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_vep_con:{{ constants.docker_images_tag }}
   cmd: |
     set -euv
     set -o pipefail

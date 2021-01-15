@@ -47,7 +47,7 @@
   cpus: 1
   mem: 4G
   walltime: "8:00:00"
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_verifybamid2:{{ constants.docker_images_tag }}s
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_verifybamid2:{{ constants.docker_images_tag }}s
   cmd: |
     set -eu
     set -o pipefail
@@ -142,7 +142,7 @@
   {% endif %}
   cpus: 1
   mem: 2G
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_freebayes_sex_check:{{ constants.docker_images_tag }}
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_freebayes_sex_check:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail

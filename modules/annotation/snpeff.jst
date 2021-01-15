@@ -14,7 +14,7 @@
     - {{ final_vcf_prefix }}.snpeff.can.vcf.gz.tbi
   walltime: "8:00:00"
   cpus: 4
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_snpeff:{{ constants.docker_images_tag }}
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_snpeff:{{ constants.docker_images_tag }}
   mem: 8G
   cmd: |
     set -eu

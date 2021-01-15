@@ -32,7 +32,7 @@
     - temp/{{ sample.gltype }}/alignment/bwa/{{ sample.name }}/{{ rgid }}/{{ fastq.basename }}/*
   cpus: 1
   walltime: "4:00:00"
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_split_fastq:{{ constants.docker_images_tag }}
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_split_fastq:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -75,7 +75,7 @@
   walltime: "48:00:00"
   cpus: 10
   mem: 50G
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_chunked_bwa_mem_samtools_fixmate:{{ constants.docker_images_tag }}
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_chunked_bwa_mem_samtools_fixmate:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -150,7 +150,7 @@
   walltime: "24:00:00"
   cpus: 8
   mem: 8G
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_chunked_samtools_merge_rg_bams:{{ constants.docker_images_tag }}
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_chunked_samtools_merge_rg_bams:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -199,7 +199,7 @@
   walltime: "48:00:00"
   cpus: 4
   mem: 16G
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_samtools_markdup:{{ constants.docker_images_tag }}
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_samtools_markdup:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail

@@ -13,7 +13,7 @@
   walltime: "0:10:00"
   cpus: 1
   mem: 2G
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_stats2json:{{ constants.docker_images_tag }}
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_stats2json:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail

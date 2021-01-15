@@ -98,7 +98,7 @@
   walltime: "4:00:00"
   cpus: 4
   mem: 8G
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_samtools_stats:{{ constants.docker_images_tag }}
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_samtools_stats:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -229,7 +229,7 @@
   walltime: "4:00:00"
   cpus: 4
   mem: 8G
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_samtools_flagstat:{{ constants.docker_images_tag }}
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_samtools_flagstat:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -290,7 +290,7 @@
   walltime: "4:00:00"
   cpus: 1
   mem: 2G
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_samtools_idxstats:{{ constants.docker_images_tag }}
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_samtools_idxstats:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -401,7 +401,7 @@
   walltime: "24:00:00"
   cpus: 2
   mem: 8G
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_gatk_collectmultiplemetrics:{{ constants.docker_images_tag }}
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_gatk_collectmultiplemetrics:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -517,7 +517,7 @@
   walltime: "24:00:00"
   cpus: 4
   mem: 8G
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_gatk_convertsequencingarrtifacttooxog:{{ constants.docker_images_tag }}
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_gatk_convertsequencingarrtifacttooxog:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -628,7 +628,7 @@
   {% endif %}
   cpus: 2
   mem: 4G
-  docker_image: {{ constants.docker_server }}/tgen_phoenix_snpsniffer_geno:{{ constants.docker_images_tag }}
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_snpsniffer_geno:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
