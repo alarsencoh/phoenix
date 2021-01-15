@@ -23,6 +23,7 @@
   mem: 4G
   docker_image: {{ constants.docker_registry }}/tgen_phoenix_bcftools_annotate:{{ constants.docker_images_tag }}
   cmd: |
+    
     set -eu
     set -o pipefail
 
