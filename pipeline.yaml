@@ -1,5 +1,5 @@
 __pipeline__:
-  name: phoenix_2
+  name: phoenix
   main: main.jst
   description: Human GRCh38 genomics suite
   version: development
