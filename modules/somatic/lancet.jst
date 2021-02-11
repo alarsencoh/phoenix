@@ -19,6 +19,7 @@
   cpus: 4
   mem: 8G
   walltime: "24:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_lancet:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -54,7 +55,7 @@
     bcftools reheader \
       -f "{{ constants.phoenix.reference_fai }}" \
       "{{ temp_dir }}/{{ loop.index }}.lancet-uns.vcf" \
-    | bcftools sort > "{{ temp_dir }}/{{ loop.index }}.lancet.vcf"
+    | bcftools sort > "{{ temp_dir }}/{{ loop.index }}.lancet.vcf" 
 
 {% endfor %}
 
@@ -72,6 +73,7 @@
   cpus: 1
   mem: 4G
   walltime: "24:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_lancet_merge_chunks:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -118,6 +120,7 @@
     - {{ pass_vcf }}.tbi
   cpus: 1
   mem: 2G
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_lancet_filter_variants:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail

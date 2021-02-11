@@ -27,6 +27,7 @@
   cpus: 20
   mem: 20G
   walltime: "24:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_manta:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -91,7 +92,7 @@
     mv "{{ temp_dir }}/results/variants/diploidSV.vcf.gz" "{{ results_dir }}/{{ pair.name }}.{{ aligner }}.manta.diploidSV.vcf.gz"
     mv "{{ temp_dir }}/results/variants/diploidSV.vcf.gz.tbi" "{{ results_dir }}/{{ pair.name }}.{{ aligner }}.manta.diploidSV.vcf.gz.tbi"
     mv "{{ temp_dir }}/results/variants/somaticSV.vcf.gz" "{{ results_dir }}/{{ pair.name }}.{{ aligner }}.manta.somaticSV.vcf.gz"
-    mv "{{ temp_dir }}/results/variants/somaticSV.vcf.gz.tbi" "{{ results_dir }}/{{ pair.name }}.{{ aligner }}.manta.somaticSV.vcf.gz.tbi"
+    mv "{{ temp_dir }}/results/variants/somaticSV.vcf.gz.tbi" "{{ results_dir }}/{{ pair.name }}.{{ aligner }}.manta.somaticSV.vcf.gz.tbi" 
 
 
 - name: manta_flag_{{ pair.name }}_{{ aligner }}
@@ -110,6 +111,7 @@
   cpus: 4
   mem: 4G
   walltime: "12:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_manta_flag:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -149,7 +151,7 @@
 
     {# compress vcf to vcf.gz #}
     bcftools view --threads 4 -O z -o {{ temp_dir }}/results/variants/somaticSV.pass.flag.vcf.gz {{ temp_dir }}/results/variants/somaticSV.pass.flag.vcf
-    bcftools index --threads 4 --tbi --force {{ temp_dir }}/results/variants/somaticSV.pass.flag.vcf.gz
+    bcftools index --threads 4 --tbi --force {{ temp_dir }}/results/variants/somaticSV.pass.flag.vcf.gz 
 
 
 - name: manta_annotate_{{ pair.name }}_{{ aligner }}
@@ -164,6 +166,7 @@
   cpus: 4
   mem: 16G
   walltime: "12:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_manta_annotate:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail

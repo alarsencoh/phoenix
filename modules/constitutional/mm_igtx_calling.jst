@@ -19,6 +19,7 @@
   cpus: 1
   mem: 4G
   walltime: "4:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_mm_igtx_pairoscope:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -61,6 +62,6 @@
       --output_file {{ results_dir }}/{{ sample.name }}.{{ aligner }}_pairoscope_igtx_calls.txt \
       --window 2000 \
       --window_min 100 \
-      --call_requirement 4
+      --call_requirement 4 
 
 {% endmacro %}

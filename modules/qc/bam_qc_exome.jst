@@ -18,6 +18,7 @@
   walltime: "8:00:00"
   cpus: 2
   mem: 16G
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_gatk_collecthsmetrics:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail

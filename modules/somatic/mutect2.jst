@@ -22,6 +22,7 @@
   cpus: 4
   mem: 16G
   walltime: "24:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_mutect2:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -58,7 +59,7 @@
       {% endfor %}
       --output "{{ temp_dir }}/{{ loop.index }}.mutect2.vcf.gz" \
       --f1r2-tar-gz "{{ temp_dir }}/{{ loop.index }}.f1r2.tar.gz" \
-      --independent-mates true
+      --independent-mates true 
 
 {% endfor %}
 
@@ -72,6 +73,7 @@
   cpus: 2
   mem: 8G
   walltime: "24:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_mutect2_getpileupsummaries:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -104,7 +106,7 @@
       --intervals "{{ interval.contig }}:{{ interval.start }}-{{ interval.stop }}" \
       {% endfor %}
       --variant {{ constants.phoenix.gnomad_genome_v3_0_mutect_contamination }} \
-      --output {{ temp_dir }}/{{ loop.index }}.normal-pileups.table
+      --output {{ temp_dir }}/{{ loop.index }}.normal-pileups.table 
 
 {% endfor %}
 
@@ -124,6 +126,7 @@
   cpus: 1
   mem: 4G
   walltime: "24:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_mutect2_merge_chunks:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -157,6 +160,7 @@
   cpus: 2
   mem: 8G
   walltime: "24:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_mutect2_merge_stats:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -186,6 +190,7 @@
   cpus: 2
   mem: 8G
   walltime: "24:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_mutect2_learn_readorientationmodel:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -218,13 +223,14 @@
   cpus: 2
   mem: 8G
   walltime: "24:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_mutect2_merge_pileup_summaries:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
 
     module load {{ constants.tools.gatk.module }}
 
-    mkdir -p {{ temp_dir }}/temp_merge_tumor
+    mkdir -p {{ temp_dir }}/temp_merge_tumor 
     mkdir -p {{ temp_dir }}/temp_merge_normal
 
     {# Merge tumor pileup #}
@@ -260,11 +266,12 @@
   cpus: 1
   mem: 4G
   walltime: "24:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_mutect2_calculate_contamination:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
 
-    module load {{ constants.tools.gatk.module }}
+    module load {{ constants.tools.gatk.module }} 
 
     mkdir -p {{ temp_dir }}/temp_calculate_contamination
 
@@ -290,11 +297,12 @@
   cpus: 2
   mem: 8G
   walltime: "24:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_mutect2_filter_calls:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
 
-    module load {{ constants.tools.gatk.module }}
+    module load {{ constants.tools.gatk.module }} 
 
     mkdir -p "{{ results_dir }}"
     mkdir -p {{ temp_dir }}/temp_filter
@@ -320,11 +328,12 @@
     - {{ pass_vcf }}.tbi
   cpu: 1
   mem: 4G
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_mutect2_filter_variants:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
 
-    module load {{ constants.tools.bcftools.module }}
+    module load {{ constants.tools.bcftools.module }} 
     
     bcftools filter \
       --output-type z \

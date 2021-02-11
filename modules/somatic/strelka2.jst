@@ -36,6 +36,7 @@
   cpus: 20
   mem: 20G
   walltime: "24:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_strelka2:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -110,7 +111,7 @@
       -o {{ results_dir }}/evidence/{{ pair.tumor.name }}.{{ aligner }}.strelka2.realigned.cram \
       {{ temp_dir }}/results/realigned/realigned.tumor.bam
 
-    samtools index {{ results_dir }}/evidence/{{ pair.tumor.name }}.{{ aligner }}.strelka2.realigned.cram
+    samtools index {{ results_dir }}/evidence/{{ pair.tumor.name }}.{{ aligner }}.strelka2.realigned.cram 
     {% else %}
     mv "{{ temp_dir }}/results/realigned/realigned.normal.bam" "{{ results_dir }}/evidence/{{ pair.normal.name }}.{{ aligner }}.strelka2.realigned.bam"
     mv "{{ temp_dir }}/results/realigned/realigned.normal.bam.bai" "{{ results_dir }}/evidence/{{ pair.normal.name }}.{{ aligner }}.strelka2.realigned.bam.bai"
@@ -132,11 +133,12 @@
     - {{ pass_vcf }}.tbi
   cpus: 1
   mem: 2G
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_strelka2_filter_variants:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
 
-    module load {{ constants.tools.bcftools.module }}
+    module load {{ constants.tools.bcftools.module }} 
 
     {# Merge the snvs and indels into a final vcf #}
     bcftools concat \

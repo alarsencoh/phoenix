@@ -21,6 +21,7 @@
   cpus: 4
   mem: 32G
   walltime: "48:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_vardict:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -184,7 +185,7 @@
       --output-type z \
       --output-file "{{ temp_dir }}/{{ loop.index }}.vardict.vcf.gz"
     
-    bcftools index --tbi --force "{{ temp_dir }}/{{ loop.index }}.vardict.vcf.gz"
+    bcftools index --tbi --force "{{ temp_dir }}/{{ loop.index }}.vardict.vcf.gz" 
 
 {% endfor %}
 
@@ -202,6 +203,7 @@
   cpus: 1
   mem: 4G
   walltime: "12:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_vardict_merge_chunks:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -238,6 +240,7 @@
   cpus: 1
   mem: 4G
   walltime: "12:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_vardict_filter_variants:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail

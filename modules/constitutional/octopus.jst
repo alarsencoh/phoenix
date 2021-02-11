@@ -20,6 +20,7 @@
   walltime: "24:00:00"
   cpus: 4
   mem: 16G
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_octopus:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -69,6 +70,7 @@
   walltime: "24:00:00"
   cpus: 1
   mem: 4G
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_octopus_merge_chunks:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -105,6 +107,7 @@
   walltime: "24:00:00"
   cpus: 1
   mem: 4G
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_octopus_filter_variants:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail

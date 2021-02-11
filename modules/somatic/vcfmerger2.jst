@@ -41,11 +41,12 @@
   cpus: 4
   mem: 8G
   walltime: "4:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_vcfmerger2_prep:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
 
-    module load {{ constants.tools.vcfmerger2.module }}
+    module load {{ constants.tools.vcfmerger2.module }} 
     module load {{ constants.tools.samtools.module }}
     module load {{ constants.tools.bcftools.module }}
     module load {{ constants.tools.htslib.module }}
@@ -80,11 +81,12 @@
   cpus: 1
   mem: 4G
   walltime: "4:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_vcfmerger2_filter:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
 
-    module load {{ constants.tools.bcftools.module }}
+    module load {{ constants.tools.bcftools.module }} 
 
     bcftools filter \
       --output-type v \
@@ -107,11 +109,12 @@
   cpus: 4
   mem: 8G
   walltime: "4:00:00"
+  docker_image: {{ constants.docker_registry }}/tgen_phoenix_vcfmerger2:{{ constants.docker_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
 
-    module load {{ constants.tools.vcfmerger2.module }}
+    module load {{ constants.tools.vcfmerger2.module }} 
     module load {{ constants.tools.samtools.module }}
     module load {{ constants.tools.bcftools.module }}
     module load {{ constants.tools.R.module }}

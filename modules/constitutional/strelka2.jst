@@ -44,7 +44,7 @@
 
     {# Purge any existing run files prior to starting #}
     rm -r "{{ temp_dir }}" || true
-    mkdir -p "{{ temp_dir }}"
+    mkdir -p "{{ temp_dir }}" 
 
     {#
     # In order to restrict calling to only the specified regions
@@ -106,7 +106,7 @@
 
     {# Move and rename the the vcfs out of their generic location #}
     mv "{{ temp_dir }}/results/variants/variants.vcf.gz" "{{ all_vcf }}"
-    mv "{{ temp_dir }}/results/variants/variants.vcf.gz.tbi" "{{ all_vcf }}.tbi"
+    mv "{{ temp_dir }}/results/variants/variants.vcf.gz.tbi" "{{ all_vcf }}.tbi" 
 
 
 - name: strelka2_filter_variants_{{ sample.name }}_{{ aligner }}
@@ -126,7 +126,7 @@
     set -eu
     set -o pipefail
 
-    module load {{ constants.tools.bcftools.module }}
+    module load {{ constants.tools.bcftools.module }} 
 
     {# Then filter out the PASS variants to a separate file #}
     bcftools filter \
