@@ -3,11 +3,12 @@
 - name: copy_fastqs_{{ fastq.basename | replace(".", "_") }}
   output: temp/fastqs/{{ fastq.basename }}
   tags: [rsync,]
-  sbatch_args: ['-p', 'overflow,defq']
   retry: 2
   cpus: 6
   walltime: "4:00:00"
+  docker_image: {{ constants.container_registry }}/tgen_phoenix_copy_fastqs:{{ constants.container_images_tag }}
   cmd: |
+
     set -uev
 
     mkdir -p temp/fastqs/

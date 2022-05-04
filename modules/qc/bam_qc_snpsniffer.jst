@@ -2,7 +2,8 @@
 
 {% from 'modules/qc/stats2json.jst' import stats2json with context %}
 
-{% macro snpsniffer_summary(samples) %}
+{% macro snpsniffer_summary(samples, taskPrefix=taskPrefix) %}
+{% if tasks[taskPrefix+"_quality_control_genotype_concordance_snpSniffer"]|default(true) %}
 
 {% set snpsniffer_list = [] %}
 {% for sample in samples.values() %}
@@ -64,7 +65,9 @@
   cpus: 1
   mem: 4G
   walltime: "0:10:00"
+  docker_image: {{ constants.container_registry }}/tgen_phoenix_snpsniffer_summary:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 
@@ -207,4 +210,5 @@
 
 {% endif %}
 
+{% endif %}
 {% endmacro %}

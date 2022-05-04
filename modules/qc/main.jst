@@ -113,5 +113,11 @@
         {{- bam_qc_snpsniffer_geno(sample, libraryCount, sample_lb, taskPrefix=taskPrefix, aligner=aligner, bam_level=false) }}
       {% endfor %}
     {% endif %}
+
+    {# project level quality control #}
+    {% if libraryCount > 1 %}
+    {{- snpsniffer_summary(samples, taskPrefix=taskPrefix) }}
+    {% endif %}
+
 {% endmacro %}
 

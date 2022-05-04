@@ -14,7 +14,9 @@
   walltime: "8:00:00"
   cpus: 8
   mem: 4G
+  docker_image: {{ constants.container_registry }}/tgen_phoenix_bam_to_cram:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 

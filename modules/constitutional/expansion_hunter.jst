@@ -13,7 +13,9 @@
   walltime: "24:00:00"
   cpus: 1
   mem: 2G
+  docker_image: {{ constants.container_registry }}/tgen_phoenix_expansion_hunter:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 
@@ -53,7 +55,9 @@
   cpus: 1
   mem: 2G
   walltime: "12:00:00"
+  docker_image: {{ constants.container_registry }}/tgen_phoenix_expansion_hunter_filter_variants:{{ constants.container_images_tag }}
   cmd: |
+  
     set -eu
     set -o pipefail
 
