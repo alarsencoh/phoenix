@@ -32,7 +32,9 @@
   walltime: "24:00:00"
   cpus: 2
   mem: 8G
+  docker_image: {{ constants.container_registry }}/tgen_phoenix_gatk_collectwgsmetrics:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 
@@ -89,7 +91,9 @@
   walltime: "24:00:00"
   cpus: 2
   mem: 8G
+  docker_image: {{ constants.container_registry }}/tgen_phoenix_gatk_collectwgsmetricswithnonzerocoverage:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 
@@ -150,7 +154,9 @@
   walltime: "24:00:00"
   cpus: 2
   mem: 8G
+  docker_image: {{ constants.container_registry }}/tgen_phoenix_gatk_collectrawwgsmetrics:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 

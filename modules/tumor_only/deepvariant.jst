@@ -24,7 +24,9 @@
   cpus: 1
   mem: 4G
   walltime: "24:00:00"
+  docker_image: {{ constants.container_registry }}/tgen_phoenix_deepvariant_make_examples:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 
@@ -65,8 +67,8 @@
   output: {{ temp_dir }}/{{ sample.name }}.cvo.tfrecord.gz
   cpus: 8
   mem: 40G
-  sbatch_args: ['-p', 'gpu', '--gres', 'gpu:1', '-N', '1', '--tasks-per-node', '1' ]
   walltime: "24:00:00"
+  docker_image: {{ constants.container_registry }}/tgen_phoenix_deepvariant_call_variants:{{ constants.container_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -99,7 +101,10 @@
   cpus: 1
   mem: 16G
   walltime: "24:00:00"
+  docker_image: {{ constants.container_registry }}/tgen_phoenix_deepvariant_postprocess_variants:{{ constants.container_images_tag }}
   cmd: |
+
+
     set -eu
     set -o pipefail
 
@@ -134,7 +139,9 @@
   cpus: 1
   mem: 4G
   walltime: "24:00:00"
+  docker_image: {{ constants.container_registry }}/tgen_phoenix_deepvariant_filter_variants:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 

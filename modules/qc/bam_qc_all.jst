@@ -104,7 +104,9 @@
   walltime: "4:00:00"
   cpus: 4
   mem: 8G
+  docker_image: {{ constants.container_registry }}/tgen_phoenix_samtools_stats:{{ constants.container_images_tag }}
   cmd: |
+  
     set -eu
     set -o pipefail
 
@@ -445,7 +447,9 @@
   walltime: "24:00:00"
   cpus: 2
   mem: 8G
+  docker_image: {{ constants.container_registry }}/tgen_phoenix_gatk_collectmultiplemetrics:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 
@@ -641,7 +645,9 @@
   {% endif %}
   cpus: 2
   mem: 4G
+  docker_image: {{ constants.container_registry }}/tgen_phoenix_snpsniffer_geno:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 

@@ -6,7 +6,9 @@
   output: {{ results_dir }}/stats/{{ input_vcf | basename }}.stats.txt
   cpus: 1
   walltime: "4:00:00"
+  docker_image: {{ constants.container_registry }}/tgen_phoenix_bcftools_stats:{{ constants.container_images_tag }}
   cmd: |
+  
     set -eu
     set -o pipefail
 

@@ -21,7 +21,9 @@
   cpus: 20
   mem: 20G
   walltime: "48:00:00"
+  docker_image: {{ constants.container_registry }}/tgen_phoenix_manta:{{ constants.container_images_tag }}
   cmd: |
+  
     set -eu
     set -o pipefail
 
