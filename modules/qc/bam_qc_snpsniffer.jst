@@ -65,7 +65,7 @@
   cpus: 1
   mem: 4G
   walltime: "0:10:00"
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_snpsniffer_summary:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_snpsniffer_summary:{{ constants.container_images_tag }}
   cmd: |
 
     set -eu

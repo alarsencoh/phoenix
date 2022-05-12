@@ -38,12 +38,16 @@
 
 - name: vcfmerger2_prep_{{ caller }}_{{ pair.name }}_{{ aligner }}
   tags: [{{ pair.gltype }}, somatic, merge_vcfs, vcfMerger2, {{ pair.name }}]
-  input: {{ gzipped_path }}
+  input: 
+   - {{ gzipped_path }}
+   - {{ constants.phoenix.reference_fasta }}
   output: {{ prepped_path }}
   cpus: 4
   mem: 8G
   walltime: "4:00:00"
+  container: {{ constants.container_registry }}/tgen_phoenix_vcfmerger2_prep:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 
@@ -82,7 +86,9 @@
   cpus: 1
   mem: 4G
   walltime: "4:00:00"
+  container: {{ constants.container_registry }}/tgen_phoenix_vcfmerger2_filter:{{ constants.container_images_tag }}
   cmd: |
+  
     set -eu
     set -o pipefail
 
@@ -105,10 +111,14 @@
     {% set filtered_path %}{{ temp_dir }}/{{ caller }}.filt.vcf{% endset %}
     - {{ filtered_path }}
     {% endfor %}
+    - {{ constants.phoenix.reference_fasta }}
+    - {{ constants.phoenix.reference_dict }}
+    - {{ constants.phoenix.encode_denylist }}
   output: {{ merged_vcf_gz }}
   cpus: 4
   mem: 8G
   walltime: "4:00:00"
+  container: {{ constants.container_registry }}/tgen_phoenix_vcfmerger2:{{ constants.container_images_tag }}
   cmd: |
     set -eu
     set -o pipefail

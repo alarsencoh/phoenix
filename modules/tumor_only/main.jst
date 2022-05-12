@@ -116,10 +116,12 @@
         {{- deepvariant_tumor_only(tumor, aligner='bwa', taskPrefix=taskPrefix) }}
     {% endif %}
 
+    {# 
     {% if tasks[taskPrefix+"_disease_specific_multiple_myeloma"]|default(true) %}
         {{- mm_igtx_gammit(tumor, aligner='bwa') }}
     {% endif %}
-
+    #}
+    
     {% if tasks[taskPrefix+"_disease_specific_multiple_myeloma"]|default(true) %}
         {{- mm_igtx_pairoscope(tumor, aligner='bwa') }}
     {% endif %}

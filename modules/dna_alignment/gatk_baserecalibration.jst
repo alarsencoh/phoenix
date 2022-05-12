@@ -136,16 +136,16 @@
 - name: no_baserecalibration_{{ sample.name }}_{{ aligner }}
   tags: [{{ sample.gltype }}, alignment, dna_alignment, bwa, {{ sample.name }}]
   reset: predecessors
-  input: temp/{{ sample.gltype }}/alignment/{{ aligner }}/{{ sample.name }}/{{ sample.name }}.{{ aligner }}.md.bam
+  input: 
+    - temp/{{ sample.gltype }}/alignment/{{ aligner }}/{{ sample.name }}/{{ sample.name }}.{{ aligner }}.md.bam
   output:
     - {{ sample.gltype }}/alignment/{{ aligner }}/{{ sample.name }}/{{ sample.name }}.{{ aligner }}.bam
     - {{ sample.gltype }}/alignment/{{ aligner }}/{{ sample.name }}/{{ sample.name }}.{{ aligner }}.bam.bai
   walltime: "1:00:00"
   cpus: 10
   mem: 8G
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_no_baserecalibration:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_no_baserecalibration:{{ constants.container_images_tag }}
   cmd: |
-  
     set -eu
     set -o pipefail
 
@@ -153,9 +153,10 @@
 
     mkdir -p "{{ sample.gltype }}/alignment/{{ aligner }}/{{ sample.name }}/"
     mv \
-      "temp/{{ sample.gltype }}/alignment/{{ aligner }}/{{ sample.name }}/{{ sample.name }}.{{ aligner }}.md.bam" \
-      "{{ sample.gltype }}/alignment/{{ aligner }}/{{ sample.name }}/{{ sample.name }}.{{ aligner }}.bam"
+      temp/{{ sample.gltype }}/alignment/{{ aligner }}/{{ sample.name }}/{{ sample.name }}.{{ aligner }}.md.bam \
+      {{ sample.gltype }}/alignment/{{ aligner }}/{{ sample.name }}/{{ sample.name }}.{{ aligner }}.bam
 
+    ls -la {{ sample.gltype }}/alignment/{{ aligner }}/{{ sample.name }}/
     samtools index -@ 10 "{{ sample.gltype }}/alignment/{{ aligner }}/{{ sample.name }}/{{ sample.name }}.{{ aligner }}.bam"
 
 {% set task %}no_baserecalibration_{{ sample.name }}_{{ aligner }}{% endset %}

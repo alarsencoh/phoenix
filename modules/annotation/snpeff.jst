@@ -3,7 +3,10 @@
 
 - name: snpeff_{{ variant_caller }}_{{ sample_or_pair.name }}_{{ aligner }}
   tags: [{{ sample_or_pair.gltype }}, {{ analysis_type }}, {{ task_type }}, annotate_vcfs, {{ variant_caller }}, {{ sample_or_pair.name }}]
-  input: {{ input_vcf }}
+  input: 
+    - {{ input_vcf }}
+    - "{{ constants.phoenix.snpeff_config }}"
+    - "{{ constants.phoenix.snpeff_data }}"
   output:
     - {{ final_vcf_prefix }}.snpeff.full.vcf.gz
     - {{ final_vcf_prefix }}.snpeff.full.vcf.gz.tbi
@@ -12,7 +15,9 @@
   walltime: "8:00:00"
   cpus: 4
   mem: 8G
+  container: {{ constants.container_registry }}/tgen_phoenix_snpeff:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 

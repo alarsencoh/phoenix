@@ -17,16 +17,17 @@
 
 - name: tumor_only_deepvariant_make_examples_{{ sample.name }}_{{ aligner }}_shard{{ i }}
   tags: [{{ sample.gltype}}, tumor_only, snp_indel_caller, deepvariant, {{ sample.name }}]
-  input: {{ bam }}
+  input: 
+    - {{ bam }}
+    - {{ constants.phoenix.reference_fasta }}
   output:
     - {{ temp_dir }}/{{ sample.name }}.ex.tfrecord-{{ iteration }}-of-{{ stop }}.gz
     - {{ temp_dir }}/{{ sample.name }}.gvcf.tfrecord-{{ iteration }}-of-{{ stop }}.gz
   cpus: 1
   mem: 4G
   walltime: "24:00:00"
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_deepvariant_make_examples:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_deepvariant_make_examples:{{ constants.container_images_tag }}
   cmd: |
-
     set -eu
     set -o pipefail
 
@@ -64,11 +65,20 @@
     - {{ temp_dir }}/{{ sample.name }}.ex.tfrecord-{{ iteration }}-of-{{ stop }}.gz
     - {{ temp_dir }}/{{ sample.name }}.gvcf.tfrecord-{{ iteration }}-of-{{ stop }}.gz
     {% endfor %}
+    {% if sample.gltype == 'exome' %}
+    - "{{ constants.phoenix.deepvariant_models.exome }}.index"
+    - "{{ constants.phoenix.deepvariant_models.exome }}.meta"
+    - "{{ constants.phoenix.deepvariant_models.exome }}.data-00000-of-00001"
+    {% else %}
+    - "{{ constants.phoenix.deepvariant_models.genome }}.index"
+    - "{{ constants.phoenix.deepvariant_models.genome }}.meta"
+    - "{{ constants.phoenix.deepvariant_models.genome }}.data-00000-of-00001"
+    {% endif %}
   output: {{ temp_dir }}/{{ sample.name }}.cvo.tfrecord.gz
   cpus: 8
   mem: 40G
   walltime: "24:00:00"
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_deepvariant_call_variants:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_deepvariant_call_variants:{{ constants.container_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -93,7 +103,9 @@
 - name: tumor_only_deepvariant_postprocess_variants_{{ sample.name }}_{{ aligner }}
   tags: [{{ sample.gltype}}, tumor_only, snp_indel_caller, deepvariant, {{ sample.name }}]
   reset: predecessors
-  input: {{ temp_dir }}/{{ sample.name }}.cvo.tfrecord.gz
+  input:
+    - {{ temp_dir }}/{{ sample.name }}.cvo.tfrecord.gz
+    - "{{ constants.phoenix.reference_fasta }}"
   output:
     - {{ all_vcf }}
     - {{ all_vcf }}.tbi
@@ -101,10 +113,8 @@
   cpus: 1
   mem: 16G
   walltime: "24:00:00"
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_deepvariant_postprocess_variants:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_deepvariant_postprocess_variants:{{ constants.container_images_tag }}
   cmd: |
-
-
     set -eu
     set -o pipefail
 
@@ -139,7 +149,7 @@
   cpus: 1
   mem: 4G
   walltime: "24:00:00"
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_deepvariant_filter_variants:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_deepvariant_filter_variants:{{ constants.container_images_tag }}
   cmd: |
 
     set -eu

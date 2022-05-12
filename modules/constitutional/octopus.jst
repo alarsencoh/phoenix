@@ -15,6 +15,7 @@
   tags: [{{ sample.gltype}}, constitutional, snp_indel_caller, octopus, {{ sample.name }}]
   input: 
     - {{ bam }}
+    - {{ constants.phoenix.reference_fasta }}
     - {{ constants.phoenix.black_list }}
   output:
     - {{ temp_dir }}/{{ loop.index }}.realigned.bam
@@ -23,8 +24,9 @@
   walltime: "24:00:00"
   cpus: 4
   mem: 16G
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_octopus:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_octopus:{{ constants.container_images_tag }}
   cmd: |
+  
     set -eu
     set -o pipefail
 
@@ -73,7 +75,7 @@
   walltime: "24:00:00"
   cpus: 1
   mem: 4G
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_octopus_merge_chunks:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_octopus_merge_chunks:{{ constants.container_images_tag }}
   cmd: |
 
 
@@ -114,7 +116,7 @@
   walltime: "24:00:00"
   cpus: 1
   mem: 4G
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_octopus_filter_variants:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_octopus_filter_variants:{{ constants.container_images_tag }}
   cmd: |
 
     set -eu

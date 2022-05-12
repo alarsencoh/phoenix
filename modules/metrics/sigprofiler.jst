@@ -44,7 +44,9 @@
   walltime: "24:00:00"
   cpus: 10
   mem: 8G
+  container: {{ constants.container_registry }}/tgen_phoenix_sigprofiler:{{ constants.container_images_tag }}
   cmd: |
+  
     set -eu
     set -o pipefail
 

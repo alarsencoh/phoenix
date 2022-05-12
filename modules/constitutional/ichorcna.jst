@@ -22,7 +22,9 @@
   walltime: "24:00:00"
   cpus: 1
   mem: 2G
+  container: {{ constants.container_registry }}/tgen_phoenix_hmmcopy_make_wig:{{ constants.container_images_tag }}
   cmd: |
+  
     set -eu
     set -o pipefail
 
@@ -67,7 +69,9 @@
   walltime: "24:00:00"
   cpus: 1
   mem: 2G
+  container: {{ constants.container_registry }}/tgen_phoenix_ichor_cna:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 

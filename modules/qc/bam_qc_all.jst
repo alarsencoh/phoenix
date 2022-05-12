@@ -56,7 +56,9 @@
   tags: [{{ sample.gltype }}, quality_control, stats, samtools_stats, {{ sample.name }}]
   methods: Quality control metrics for {{ sample.name }} ({{ aligner }}) were
     generated with {{ constants.tools.samtools.verbose }} stats.
-  input: {{ bam }}
+  input: 
+    - {{ bam }}
+    - {{ constants.phoenix.reference_non_N_interval_list }}
   output:
     - {{ results_dir }}/{{ bam|basename }}.bamstats.txt
     - {{ results_dir }}/{{ bam|basename }}.samstats_no_N_1based_target_regions.txt
@@ -104,9 +106,8 @@
   walltime: "4:00:00"
   cpus: 4
   mem: 8G
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_samtools_stats:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_samtools_stats:{{ constants.container_images_tag }}
   cmd: |
-  
     set -eu
     set -o pipefail
 
@@ -228,11 +229,14 @@
   tags: [{{ sample.gltype }}, quality_control, stats, samtools_markdup, {{ sample.name }}]
   methods: Quality control metrics for {{ sample.name }} ({{ aligner }}) were
     generated with {{ constants.tools.samtools.verbose }} stats.
-  input: {{ results_dir }}/{{ sample.name }}.{{ aligner }}.bam.samtools.markdup.txt
+  input: 
+    - {{ results_dir }}/{{ sample.name }}.{{ aligner }}.bam.samtools.markdup.txt
+    - {{ bam }}
   output: {{ output }}
   walltime: "4:00:00"
   cpus: 1
   mem: 4G
+  container: {{ constants.container_registry }}/tgen_phoenix_samtools_markdup_stats:{{ constants.container_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -243,7 +247,7 @@
 
     Rscript ${JS_PIPELINE_PATH}/required_scripts/{{ constants.phoenix.plotSamStats_Rscript }} \
         --samtoolsDuplicatesFile={{ sample.name }}.{{ aligner }}.bam.samtools.markdup.txt \
-        --bam={{ bam|basename }} \
+        --bam={{ bam }} \
         --sample={{ sample.name }} \
         --library={{ sample_lb }}
 
@@ -283,7 +287,9 @@
   walltime: "4:00:00"
   cpus: 4
   mem: 8G
+  container: {{ constants.container_registry }}/tgen_phoenix_samtools_flagstat:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 
@@ -343,7 +349,9 @@
   walltime: "4:00:00"
   cpus: 1
   mem: 2G
+  container: {{ constants.container_registry }}/tgen_phoenix_samtools_idxstats:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 
@@ -409,7 +417,15 @@
     and other metrics for {{ sample.name }} ({{ aligner }}) were
     gathered with {{ constants.tools.gatk.verbose }}
     CollectMultipleMetrics.
-  input: {{ bam }}
+  input: 
+    - {{ bam }}
+    {% if sample.gltype == 'rna' or sample.gltype == 'singlecellrna' %}
+    - "{{ constants.phoenix.star_fasta }}"
+    {% elif sample.gltype == 'chip' %}
+    - "{{ constants.phoenix.chip_fasta }}"
+    {% else %}
+    - "{{ constants.phoenix.reference_fasta }}"
+    {% endif %}
   output:
     - {{ results_dir }}/{{ bam|basename }}.alignment_summary_metrics
     - {{ results_dir }}/{{ bam|basename }}.bait_bias_detail_metrics
@@ -447,9 +463,8 @@
   walltime: "24:00:00"
   cpus: 2
   mem: 8G
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_gatk_collectmultiplemetrics:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_gatk_collectmultiplemetrics:{{ constants.container_images_tag }}
   cmd: |
-
     set -eu
     set -o pipefail
 
@@ -536,7 +551,15 @@
 
 - name: gatk_convertsequencingarrtifacttooxog_{{ sample.name }}_{{ aligner }}
   tags: [{{ sample.gltype }}, quality_control, stats, gatk_ConvertSequencingArtifactToOxoG, {{ sample.name }}]
-  input: {{ bam }}
+  input:
+    - {{ bam }}
+    {% if sample.gltype == 'rna' or sample.gltype == 'singlecellrna' %}
+    - "{{ constants.phoenix.star_fasta }}"
+    {% elif sample.gltype == 'chip' %}
+    - "{{ constants.phoenix.chip_fasta }}"
+    {% else %}
+    - "{{ constants.phoenix.reference_fasta }}"
+    {% endif %}
   output:
     - {{ results_dir }}/{{ bam|basename }}.oxog_metrics
     {% if sample.gltype == 'singlecellrna' %}
@@ -547,6 +570,7 @@
       {% endfor %}
     {% endif %}
   walltime: "24:00:00"
+  container: {{ constants.container_registry }}/tgen_phoenix_gatk_convertsequencingarrtifacttooxog:{{ constants.container_images_tag }}
   cpus: 4
   mem: 8G
   cmd: |
@@ -634,7 +658,17 @@
 
 - name: snpsniffer_geno_{{ task }}
   tags: [{{ sample.gltype }}, quality_control, genotype_concordance, snpSniffer, {{ sample.name }}]
-  input: {{ bam }}
+  input: 
+    - {{ bam }}
+    {% if sample.gltype == 'rna' or sample.gltype == 'singlecellrna' %}
+    - "{{ constants.phoenix.star_fasta }}"
+    {% elif sample.gltype == 'chip' %}
+    - "{{ constants.phoenix.chip_fasta }}"
+    {% else %}
+    - "{{ constants.phoenix.reference_fasta }}"
+    {% endif %}
+    - {{ constants.phoenix.snpSniffer_sites }}
+    - {{ constants.phoenix.bcftools_annotate_contig_update_ucsc2ensembl }}
   output:
     - {{ results_dir }}/{{ bam|basename }}.snpSniffer.vcf
     {% if libraryCount == 1 %}
@@ -645,7 +679,7 @@
   {% endif %}
   cpus: 2
   mem: 4G
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_snpsniffer_geno:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_snpsniffer_geno:{{ constants.container_images_tag }}
   cmd: |
 
     set -eu

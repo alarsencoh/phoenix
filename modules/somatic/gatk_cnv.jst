@@ -23,6 +23,11 @@
     - {{ normal_bam_stats }}
     - {{ tumor_bam_stats }}
     - {{ normal_sex_check }}
+    - {{ constants.phoenix.reference_fasta }}
+    - {{ constants.phoenix.gatk_cnv_primary_contigs_female }}
+    - {{ constants.phoenix.gatk_cnv_primary_contigs_male }}
+    - {{ constants.phoenix.encode_denylist }}
+    - {{ constants.phoenix.mappability_track }}
   output:
     - {{ temp_dir }}/preprocessed_filt.interval_list
     - {{ temp_dir }}/anno_preprocessed.interval_list
@@ -30,7 +35,9 @@
   cpus: 1
   mem: 16G
   walltime: "24:00:00"
+  container: {{ constants.container_registry }}/tgen_phoenix_gatk_call_cnv_step1:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 
@@ -256,7 +263,9 @@
   cpus: 1
   mem: 16G
   walltime: "24:00:00"
+  container: {{ constants.container_registry }}/tgen_phoenix_gatk_call_cnv_step2a:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 
@@ -282,13 +291,16 @@
   reset: gatk_call_cnv_step1_{{ pair.name }}_{{ aligner }}
   input:
     - {{ normal_bam }}
+    - {{ constants.phoenix.reference_fasta }}
     - {{ temp_dir }}/{{ pair.normal.name }}.{{ aligner }}.snps.vcf
   output:
     - {{ results_dir }}/{{ pair.normal.name }}.{{ aligner }}.allelicCounts.tsv
   cpus: 1
   mem: 16G
   walltime: "24:00:00"
+  container: {{ constants.container_registry }}/tgen_phoenix_gatk_call_cnv_step2b:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 
@@ -319,7 +331,9 @@
   cpus: 1
   mem: 16G
   walltime: "24:00:00"
+  container: {{ constants.container_registry }}/tgen_phoenix_gatk_call_cnv_step2c:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 
@@ -345,12 +359,14 @@
   reset: gatk_call_cnv_step1_{{ pair.name }}_{{ aligner }}
   input:
     - {{ tumor_bam }}
+    - {{ constants.phoenix.reference_fasta }}
     - {{ temp_dir }}/{{ pair.normal.name }}.{{ aligner }}.snps.vcf
   output:
     - {{ results_dir }}/{{ pair.tumor.name }}.{{ aligner }}.allelicCounts.tsv
   cpus: 1
   mem: 16G
   walltime: "24:00:00"
+  container: {{ constants.container_registry }}/tgen_phoenix_gatk_call_cnv_step2d:{{ constants.container_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -382,9 +398,7 @@
     - {{ temp_dir }}/anno_preprocessed.interval_list
     - {{ temp_dir }}/{{ pair.normal.name }}.{{ aligner }}.counts.hdf5
     - {{ temp_dir }}/{{ pair.tumor.name }}.{{ aligner }}.counts.hdf5
-    - {{ temp_dir }}/cnv.pon.hdf5
     - {{ normal_bam_stats }}
-    - {{ results_dir }}/{{ pair.name }}.{{ aligner }}.denoisedCR.tsv
     - {{ results_dir }}/{{ pair.tumor.name }}.{{ aligner }}.allelicCounts.tsv
     - {{ results_dir }}/{{ pair.normal.name }}.{{ aligner }}.allelicCounts.tsv
   output:
@@ -406,7 +420,9 @@
   cpus: 1
   mem: 16G
   walltime: "24:00:00"
+  container: {{ constants.container_registry }}/tgen_phoenix_gatk_call_cnv_step3:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 
@@ -507,6 +523,7 @@
     - {{ results_dir }}/{{ pair.name }}.{{ aligner }}.denoisedCR.tsv
     - {{ results_dir }}/{{ pair.name }}.{{ aligner }}.modelFinal.seg
     - {{ results_dir }}/{{ pair.name }}.{{ aligner }}.hets.tsv
+    - {{ constants.phoenix.centromere }}
   output:
     - {{ results_dir }}/{{ pair.name }}.{{ aligner }}.denoisedCR.genderCorrected.tsv
     - {{ results_dir }}/{{ pair.name }}.{{ aligner }}.modelFinal.genderCorrected.seg
@@ -544,6 +561,7 @@
   cpus: 1
   mem: 16G
   walltime: "24:00:00"
+  container: {{ constants.container_registry }}/tgen_phoenix_gatk_call_cnv_step4:{{ constants.container_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
@@ -704,10 +722,11 @@
     {# If the task has already been run then we need to remove the plots directory. #}
     if [ -d {{ results_dir }}/plots ]
     then
-      rm -rf {{ results_dir }}/plots
+      rm -rf {{ results_dir }}/plots || true
     fi
 
-    mv {{ temp_dir }}/results/* {{ results_dir }}/
+    mv {{ temp_dir }}/results/* {{ results_dir }}/ || 
+    cp -r {{ temp_dir }}/results/* {{ results_dir }}/
 
     {% set final_seg %}{{ results_dir }}/{{ pair.name }}.{{ aligner }}.re_centered.cr.igv.seg{% endset %}
     {{- annot_seg(final_seg, pair.name) }}

@@ -16,13 +16,16 @@
   input:
     - {{ normal_bam }}
     - {{ tumor_bam }}
+    - {{ constants.phoenix.reference_fasta }}
   output:
     - {{ temp_dir }}/{{ loop.index }}.vardict.vcf.gz
     - {{ temp_dir }}/{{ loop.index }}.vardict.vcf.gz.tbi
   cpus: 4
   mem: 32G
   walltime: "48:00:00"
+  container: {{ constants.container_registry }}/tgen_phoenix_vardict:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 
@@ -203,7 +206,9 @@
   cpus: 1
   mem: 4G
   walltime: "12:00:00"
+  container: {{ constants.container_registry }}/tgen_phoenix_vardict_merge_chunks:{{ constants.container_images_tag }}
   cmd: |
+  
     set -eu
     set -o pipefail
 
@@ -241,7 +246,9 @@
   cpus: 1
   mem: 4G
   walltime: "12:00:00"
+  container: {{ constants.container_registry }}/tgen_phoenix_vardict_filter_variants:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 

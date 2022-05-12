@@ -6,7 +6,9 @@
   cpus: 1
   mem: 4G
   walltime: "1:00:00"
+  container: {{ constants.container_registry }}/tgen_phoenix_annot_seg:{{ constants.container_images_tag }}
   cmd: |
+  
     set -uev
 
     {#

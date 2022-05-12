@@ -19,7 +19,9 @@
   walltime: "12:00:00"
   cpus: 1
   mem: 2G
+  container: {{ constants.container_registry }}/tgen_phoenix_tucon:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 

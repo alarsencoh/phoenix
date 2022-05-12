@@ -23,7 +23,9 @@
 
 - name: verifybamid2_{{ task }}
   tags: [{{ sample.gltype }}, quality_control, constitutional_contamination_check, VerifyBamID, {{ sample.name }}]
-  input: {{ bam }}
+  input:
+    - {{ bam }}
+    - {{ constants.phoenix.reference_fasta }}
   output:
     - {{ metrics }}.out
     - {{ metrics }}.selfSM
@@ -41,7 +43,7 @@
   cpus: 1
   mem: 4G
   walltime: "8:00:00"
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_verifybamid2:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_verifybamid2:{{ constants.container_images_tag }}
   cmd: |
 
     set -eu
@@ -122,7 +124,11 @@
 
 - name: freebayes_sex_check_{{ task }}
   tags: [{{ sample.gltype }}, quality_control, constitutional_sex_check, freebayes, {{ sample.name }}]
-  input: {{ bam }}
+  input:
+    - {{ bam }}
+    - {{ constants.phoenix.reference_fasta }}
+    - {{ constants.phoenix.sex_check_targets }}
+    - {{ constants.phoenix.sex_check_vcf }}
   output:
     - {{ output }}
     {% if libraryCount == 1 %}
@@ -133,9 +139,8 @@
   {% endif %}
   cpus: 1
   mem: 2G
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_freebayes_sex_check:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_freebayes_sex_check:{{ constants.container_images_tag }}
   cmd: |
-  
     set -eu
     set -o pipefail
 

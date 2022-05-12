@@ -20,7 +20,7 @@
   cpus: 4
   mem: 8G
   walltime: "24:00:00"
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_lancet:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_lancet:{{ constants.container_images_tag }}
   cmd: |
 
     set -eu
@@ -75,7 +75,7 @@
   cpus: 1
   mem: 4G
   walltime: "24:00:00"
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_lancet_merge_chunks:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_lancet_merge_chunks:{{ constants.container_images_tag }}
   cmd: |
 
     set -eu
@@ -125,7 +125,7 @@
     - {{ pass_vcf }}.tbi
   cpus: 1
   mem: 2G
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_lancet_filter_variants:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_lancet_filter_variants:{{ constants.container_images_tag }}
   cmd: |
 
     set -eu

@@ -12,7 +12,9 @@
   walltime: "8:00:00"
   cpus: 2
   mem: 4G
+  container: {{ constants.container_registry }}/tgen_phoenix_add_rna_header_to_vcf:{{ constants.container_images_tag }}
   cmd: |
+  
     set -eu
     set -o pipefail
 

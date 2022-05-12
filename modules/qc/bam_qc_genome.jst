@@ -20,7 +20,9 @@
 
 - name: gatk_collectwgsmetrics_{{ task }}
   tags: [{{ sample.gltype }}, quality_control, stats, gatk_CollectWgsMetrics, {{ sample.name }}]
-  input: {{ bam }}
+  input: 
+    - {{ bam }}
+    - {{ constants.phoenix.reference_fasta }}
   output:
     - {{ dna_metrics }}
     {% if libraryCount == 1 %}
@@ -32,7 +34,7 @@
   walltime: "24:00:00"
   cpus: 2
   mem: 8G
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_gatk_collectwgsmetrics:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_gatk_collectwgsmetrics:{{ constants.container_images_tag }}
   cmd: |
 
     set -eu
@@ -77,7 +79,9 @@
 
 - name: gatk_collectwgsmetricswithnonzerocoverage_{{ task }}
   tags: [{{ sample.gltype }}, quality_control, stats, gatk_CollectWgsMetricsWithNonZeroCoverage, {{ sample.name }}]
-  input: {{ bam }}
+  input: 
+    - {{ bam }}
+    - {{ constants.phoenix.reference_fasta }}
   output:
     - {{ output }}
     - {{ output }}.pdf
@@ -91,7 +95,7 @@
   walltime: "24:00:00"
   cpus: 2
   mem: 8G
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_gatk_collectwgsmetricswithnonzerocoverage:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_gatk_collectwgsmetricswithnonzerocoverage:{{ constants.container_images_tag }}
   cmd: |
 
     set -eu
@@ -142,7 +146,9 @@
 
 - name: gatk_collectrawwgsmetrics_{{ task }}
   tags: [{{ sample.gltype }}, quality_control, stats, gatk_CollectRawWgsMetrics, {{ sample.name }}]
-  input: {{ bam }}
+  input: 
+    - {{ bam }}
+    - {{ constants.phoenix.reference_fasta }}
   output:
     - {{ dna_metrics }}
     {% if libraryCount == 1 %}
@@ -154,9 +160,8 @@
   walltime: "24:00:00"
   cpus: 2
   mem: 8G
-  docker_image: {{ constants.container_registry }}/tgen_phoenix_gatk_collectrawwgsmetrics:{{ constants.container_images_tag }}
+  container: {{ constants.container_registry }}/tgen_phoenix_gatk_collectrawwgsmetrics:{{ constants.container_images_tag }}
   cmd: |
-
     set -eu
     set -o pipefail
 

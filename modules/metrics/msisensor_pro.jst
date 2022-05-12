@@ -11,10 +11,12 @@
   input:
     - {{ normal_bam }}
     - {{ tumor_bam }}
+    - {{ constants.phoenix.reference_msisensor_pro }}
   output: {{ results_dir }}/{{ pair.name }}_msisensor_pro_results
   walltime: "24:00:00"
   cpus: 4
   mem: 8G
+  container: {{ constants.container_registry }}/tgen_phoenix_msisensor_pro:{{ constants.container_images_tag }}
   cmd: |
     set -eu
     set -o pipefail

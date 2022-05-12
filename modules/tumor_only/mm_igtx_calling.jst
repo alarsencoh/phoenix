@@ -20,7 +20,9 @@
   cpus: 1
   mem: 4G
   walltime: "4:00:00"
+  container: {{ constants.container_registry }}/tgen_phoenix_mm_igtx_pairoscope:{{ constants.container_images_tag }}
   cmd: |
+
     set -eu
     set -o pipefail
 
@@ -83,7 +85,9 @@
   walltime: "12:00:00"
   cpus: 4
   mem: 8G
+  container: {{ constants.container_registry }}/tgen_phoenix_discordant_loci_extraction:{{ constants.container_images_tag }}
   cmd: |
+  
     set -eu
     set -o pipefail
 
@@ -507,12 +511,12 @@
     {% if control.pathToBam is defined %}
     - {{ manta_path }}
     {% endif %}
-    - {{ gammit_path }}
     - {{ pairoscope_path }}
   output: {{ results_dir }}/{{ sample.name }}_mm_igtx_summary.txt
   walltime: "24:00:00"
   cpus: 2
   mem: 4G
+  container: {{ constants.container_registry }}/tgen_phoenix_summarize_mm_igtx:{{ constants.container_images_tag }}
   cmd: |
     set -eu
     set -o pipefail
